@@ -8,11 +8,11 @@ import (
 	"log"
 	"strings"
 
+	"github.com/dmgol/mashunya/db"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/l10n"
 	"github.com/qor/media_library"
 	"github.com/qor/publish2"
-	"github.com/qor/qor-example/db"
 	"github.com/qor/slug"
 	"github.com/qor/sorting"
 	"github.com/qor/validations"
