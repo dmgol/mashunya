@@ -1,0 +1,5 @@
+db:
+  adapter: mysql
+  name: mashunya
+  user: mashunya
+  password: mashunya
