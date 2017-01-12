@@ -12,7 +12,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/qor/l10n"
 	"github.com/qor/media_library"
-	"github.com/qor/publish2"
 	"github.com/qor/slug"
 	"github.com/qor/sorting"
 	"github.com/qor/validations"
@@ -154,7 +153,6 @@ type ColorVariation struct {
 	ColorCode      string
 	Images         media_library.MediaBox
 	SizeVariations []SizeVariation
-	publish2.SharedVersion
 }
 
 type ColorVariationImage struct {
@@ -187,7 +185,6 @@ type SizeVariation struct {
 	SizeID            uint
 	Size              Size
 	AvailableQuantity uint
-	publish2.SharedVersion
 }
 
 func SizeVariations() []SizeVariation {
