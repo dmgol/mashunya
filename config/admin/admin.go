@@ -15,7 +15,6 @@ import (
 
 	"github.com/dmgol/mashunya/app/models"
 	"github.com/dmgol/mashunya/config/admin/bindatafs"
-	"github.com/dmgol/mashunya/config/auth"
 	"github.com/dmgol/mashunya/db"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/action_bar"
@@ -40,7 +39,7 @@ var Countries = []string{"Россия"}
 func init() {
 	Admin = admin.New(&qor.Config{DB: db.DB})
 	Admin.SetSiteName("Mashunya")
-	Admin.SetAuth(auth.AdminAuth{})
+	//	Admin.SetAuth(auth.AdminAuth{})
 	Admin.SetAssetFS(bindatafs.AssetFS)
 
 	// Add Asset Manager, for rich editor
