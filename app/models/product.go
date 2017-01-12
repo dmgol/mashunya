@@ -36,10 +36,6 @@ type Product struct {
 	ColorVariations       []ColorVariation `l10n:"sync"`
 	ColorVariationsSorter sorting.SortableCollection
 	ProductProperties     ProductProperties `sql:"type:text"`
-
-	publish2.Version
-	publish2.Schedule
-	publish2.Visible
 }
 
 func (product Product) DefaultPath() string {
