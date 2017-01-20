@@ -20,7 +20,6 @@ import (
 	"github.com/qor/action_bar"
 	"github.com/qor/activity"
 	"github.com/qor/admin"
-	"github.com/qor/help"
 	"github.com/qor/i18n/exchange_actions"
 	"github.com/qor/media_library"
 	"github.com/qor/notification"
@@ -44,10 +43,6 @@ func init() {
 
 	// Add Asset Manager, for rich editor
 	assetManager := Admin.AddResource(&media_library.AssetManager{}, &admin.Config{Invisible: true})
-
-	// Add Help
-	Help := Admin.NewResource(&help.QorHelpEntry{})
-	Help.GetMeta("Body").Config = &admin.RichEditorConfig{AssetManager: assetManager}
 
 	// Add Notification
 	Notification := notification.New(&notification.Config{})
@@ -145,7 +140,7 @@ func init() {
 	product.Meta(&admin.Meta{Name: "MainImage", Config: &media_library.MediaBoxConfig{
 		RemoteDataResource: ProductImagesResource,
 		Max:                1,
-		Sizes: map[string]media_library.Size{
+		Sizes: map[string]*media_library.Size{
 			"main": {Width: 300, Height: 300},
 		},
 	}})
@@ -170,7 +165,7 @@ func init() {
 	colorVariation := colorVariationMeta.Resource
 	colorVariation.Meta(&admin.Meta{Name: "Images", Config: &media_library.MediaBoxConfig{
 		RemoteDataResource: ProductImagesResource,
-		Sizes: map[string]media_library.Size{
+		Sizes: map[string]*media_library.Size{
 			"icon":    {Width: 50, Height: 50},
 			"preview": {Width: 300, Height: 300},
 			"listing": {Width: 640, Height: 640},
