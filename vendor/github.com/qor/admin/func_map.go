@@ -112,13 +112,15 @@ func (context *Context) URLFor(value interface{}, resources ...*Resource) string
 				primaryValues = map[string]string{}
 			)
 
-			if primaryField != nil {
+			if primaryField != nil && !primaryField.IsBlank {
 				primaryKey = fmt.Sprint(reflect.Indirect(primaryField.Field).Interface())
 			}
 
-			for _, field := range scope.PrimaryFields() {
-				if field.DBName != primaryField.DBName {
-					primaryValues[fmt.Sprintf("primary_key[%v_%v]", scope.TableName(), field.DBName)] = fmt.Sprint(reflect.Indirect(field.Field).Interface())
+			if !primaryField.IsBlank {
+				for _, field := range scope.PrimaryFields() {
+					if field.DBName != primaryField.DBName {
+						primaryValues[fmt.Sprintf("primary_key[%v_%v]", scope.TableName(), field.DBName)] = fmt.Sprint(reflect.Indirect(field.Field).Interface())
+					}
 				}
 			}
 

@@ -10,6 +10,7 @@ import (
 	"github.com/dmgol/mashunya/config/auth"
 	_ "github.com/dmgol/mashunya/db/migrations"
 	"github.com/gorilla/csrf"
+	"github.com/qor/qor/utils"
 )
 
 func main() {
@@ -17,6 +18,10 @@ func main() {
 	admin.Admin.MountTo("/admin", mux)
 
 	mux.Handle("/auth/", auth.Auth.NewRouter())
+
+	for _, path := range []string{"system", "images"} {
+		mux.Handle(fmt.Sprintf("/%s/", path), utils.FileServer(http.Dir("public")))
+	}
 
 	fmt.Printf("Listening on: %v\n", config.Config.Port)
 	skipCheck := func(h http.Handler) http.Handler {

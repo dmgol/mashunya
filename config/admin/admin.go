@@ -33,7 +33,6 @@ import (
 
 var Admin *admin.Admin
 var ActionBar *action_bar.ActionBar
-var Countries = []string{"Россия"}
 
 func init() {
 	Admin = admin.New(&qor.Config{DB: db.DB})
@@ -125,7 +124,6 @@ func init() {
 
 	// Add Product
 	product := Admin.AddResource(&models.Product{}, &admin.Config{Menu: []string{"Product Management"}})
-	product.Meta(&admin.Meta{Name: "MadeCountry", Config: &admin.SelectOneConfig{Collection: Countries}})
 	product.Meta(&admin.Meta{Name: "Description", Config: &admin.RichEditorConfig{AssetManager: assetManager, Plugins: []admin.RedactorPlugin{
 		{Name: "medialibrary", Source: "/admin/assets/javascripts/qor_redactor_medialibrary.js"},
 		{Name: "table", Source: "/javascripts/redactor_table.js"},
@@ -181,7 +179,6 @@ func init() {
 		&admin.Section{
 			Rows: [][]string{
 				{"Size", "AvailableQuantity"},
-				{"ShareableVersion"},
 			},
 		},
 	)
@@ -200,7 +197,7 @@ func init() {
 		&admin.Section{
 			Title: "Organization",
 			Rows: [][]string{
-				{"Category", "MadeCountry"},
+				{"Category"},
 				{"Collections"},
 			}},
 		"ProductProperties",
@@ -208,13 +205,6 @@ func init() {
 		"ColorVariations",
 	)
 	product.NewAttrs(product.EditAttrs())
-
-	for _, country := range Countries {
-		var country = country
-		product.Scope(&admin.Scope{Name: country, Group: "Made Country", Handle: func(db *gorm.DB, ctx *qor.Context) *gorm.DB {
-			return db.Where("made_country = ?", country)
-		}})
-	}
 
 	product.Action(&admin.Action{
 		Name: "View On Site",
