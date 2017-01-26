@@ -1,9 +1,9 @@
 package admin
 
 import (
+	"github.com/dmgol/mashunya/config"
+	"github.com/dmgol/mashunya/config/auth"
 	"github.com/qor/filebox"
-	"github.com/qor/qor-example/config"
-	"github.com/qor/qor-example/config/auth"
 	"github.com/qor/roles"
 )
 

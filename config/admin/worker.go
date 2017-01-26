@@ -5,12 +5,12 @@ import (
 	"path"
 	"time"
 
+	"github.com/dmgol/mashunya/app/models"
+	"github.com/dmgol/mashunya/db"
 	"github.com/qor/exchange"
 	"github.com/qor/exchange/backends/csv"
 	"github.com/qor/media_library"
 	"github.com/qor/qor"
-	"github.com/qor/qor-example/app/models"
-	"github.com/qor/qor-example/db"
 	"github.com/qor/worker"
 )
 

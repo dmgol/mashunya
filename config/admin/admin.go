@@ -15,6 +15,8 @@ import (
 
 	"github.com/dmgol/mashunya/app/models"
 	"github.com/dmgol/mashunya/config/admin/bindatafs"
+	"github.com/dmgol/mashunya/config/auth"
+	"github.com/dmgol/mashunya/config/i18n"
 	"github.com/dmgol/mashunya/db"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/action_bar"
@@ -25,7 +27,6 @@ import (
 	"github.com/qor/notification"
 	"github.com/qor/notification/channels/database"
 	"github.com/qor/qor"
-	"github.com/qor/qor-example/config/i18n"
 	"github.com/qor/qor/resource"
 	"github.com/qor/transition"
 	"github.com/qor/validations"
@@ -37,7 +38,7 @@ var ActionBar *action_bar.ActionBar
 func init() {
 	Admin = admin.New(&qor.Config{DB: db.DB})
 	Admin.SetSiteName("Mashunya")
-	//	Admin.SetAuth(auth.AdminAuth{})
+	Admin.SetAuth(auth.AdminAuth{})
 	Admin.SetAssetFS(bindatafs.AssetFS)
 
 	// Add Asset Manager, for rich editor
@@ -430,7 +431,7 @@ func init() {
 
 	initWidgets()
 	initFuncMap()
-	initRouter()
+	//initRouter()
 }
 
 func sizeVariationCollection(resource interface{}, context *qor.Context) (results [][]string) {

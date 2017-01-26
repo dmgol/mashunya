@@ -25,6 +25,8 @@ var (
 
 func init() {
 	Auth.MountPath = "/auth"
+	Auth.AuthLoginOKPath = "/admin"
+	Auth.AuthLoginFailPath = "/admin1"
 	Auth.XSRFName = "gorilla.csrf.Token"
 	Auth.XSRFMaker = func(_ http.ResponseWriter, r *http.Request) string {
 		return csrf.Token(r)

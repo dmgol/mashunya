@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/dmgol/mashunya/app/models"
@@ -27,6 +28,7 @@ func (AdminAuth) LogoutURL(c *admin.Context) string {
 }
 
 func (AdminAuth) GetCurrentUser(c *admin.Context) qor.CurrentUser {
+	log.Println("AdminAuth.GetCurrentUser...")
 	userInter, err := Auth.CurrentUser(c.Writer, c.Request)
 	if userInter != nil && err == nil {
 		return userInter.(*models.User)

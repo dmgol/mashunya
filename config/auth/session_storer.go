@@ -1,8 +1,8 @@
 package auth
 
 import (
-	"encoding/base64"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/sessions"
@@ -19,15 +19,18 @@ type SessionStorer struct {
 }
 
 func init() {
-	sessionStoreKey, _ := base64.StdEncoding.DecodeString(`EGxRGrqkogymr5EHAX9V3RAzaZzj9_heLXM4M6DZDuGsEd-nfw8veekXWDY11pfsWXtQsJMzZxRm2zpjGg9dJQ==`)
+	//sessionStoreKey, _ := base64.StdEncoding.DecodeString(`Z2hqZHRocmZjZnFuZnlmZGJoZWNz`)
+	sessionStoreKey := []byte("TestKey")
 	sessionStore = sessions.NewCookieStore(sessionStoreKey)
 }
 
 func NewSessionStorer(w http.ResponseWriter, r *http.Request) authboss.ClientStorer {
+	log.Println("NewSessionStorer...")
 	return &SessionStorer{w, r}
 }
 
 func (s SessionStorer) Get(key string) (string, bool) {
+	log.Println("SessionStorer.Get ...", key)
 	session, err := sessionStore.Get(s.r, sessionCookieName)
 	if err != nil {
 		fmt.Println(err)
@@ -48,6 +51,7 @@ func (s SessionStorer) Get(key string) (string, bool) {
 }
 
 func (s SessionStorer) Put(key, value string) {
+	log.Println("SessionStorer.Put ...", key, value)
 	session, err := sessionStore.Get(s.r, sessionCookieName)
 	if err != nil {
 		fmt.Println(err)
@@ -59,6 +63,7 @@ func (s SessionStorer) Put(key, value string) {
 }
 
 func (s SessionStorer) Del(key string) {
+	log.Println("SessionStorer.Del ...", key)
 	session, err := sessionStore.Get(s.r, sessionCookieName)
 	if err != nil {
 		fmt.Println(err)
