@@ -46,7 +46,7 @@ func (s SessionStorer) Get(key string) (string, bool) {
 	if !ok {
 		return "", false
 	}
-
+	log.Println("...SessionStorer.Get", str)
 	return str, true
 }
 

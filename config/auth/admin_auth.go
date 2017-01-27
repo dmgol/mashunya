@@ -31,7 +31,9 @@ func (AdminAuth) GetCurrentUser(c *admin.Context) qor.CurrentUser {
 	log.Println("AdminAuth.GetCurrentUser...")
 	userInter, err := Auth.CurrentUser(c.Writer, c.Request)
 	if userInter != nil && err == nil {
+		log.Println("...AdminAuth.GetCurrentUser", userInter)
 		return userInter.(*models.User)
 	}
+	log.Println("...AdminAuth.GetCurrentUser", nil)
 	return nil
 }

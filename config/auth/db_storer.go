@@ -47,6 +47,7 @@ func (s AuthStorer) Get(key string) (result interface{}, err error) {
 	if err := db.DB.Where("email = ?", key).First(&user).Error; err != nil {
 		return nil, authboss.ErrUserNotFound
 	}
+	log.Println("... AuthStorer.Get", user)
 	return &user, nil
 }
 
