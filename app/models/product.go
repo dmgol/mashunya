@@ -26,7 +26,7 @@ type Product struct {
 	NameWithSlug          slug.Slug    `l10n:"sync"`
 	Code                  string       `l10n:"sync"`
 	CategoryID            uint         `l10n:"sync"`
-	Category              Category     `l10n:"sync"`
+	Category              Category     `l10n:"sync" json:"-"`
 	Collections           []Collection `l10n:"sync" gorm:"many2many:product_collections;"`
 	MainImage             media_library.MediaBox
 	Price                 float32          `l10n:"sync"`
