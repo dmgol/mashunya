@@ -11,6 +11,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func getProductList(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK,
+		gin.H{
+			"ProductList": "Not found",
+		})
+	return
+}
+
 func getProduct(ctx *gin.Context) {
 	var (
 		product models.Product
@@ -41,13 +49,22 @@ func getProduct(ctx *gin.Context) {
 		})
 }
 
+func serveStaticPath(router *gin.Engine, paths []string, root string) {
+	for _, path := range paths {
+		router.Static("/"+path, "public/"+path+"/"+root)
+	}
+}
+
 // ServeClients serves client request
 func ServeClients() {
 	router := gin.Default()
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"Result": "Ok"})
 	})
-	router.GET("/product/:code", getProduct)
+	router.GET("/products", getProductList)
+	router.GET("/products/:code", getProduct)
+
+	serveStaticPath(router, []string{"system"}, config.Root)
 
 	router.Run(fmt.Sprintf(":%d", config.Config.ClientsPort))
 }
