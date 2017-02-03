@@ -9,4 +9,5 @@ type Collection struct {
 	gorm.Model
 	Name string
 	l10n.LocaleCreatable
+	Products []Product `gorm:"many2many:product_collections;"`
 }

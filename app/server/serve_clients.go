@@ -5,18 +5,57 @@ import (
 	"net/http"
 	"strings"
 
+	"strconv"
+
 	"github.com/dmgol/mashunya/app/models"
 	"github.com/dmgol/mashunya/config"
 	"github.com/dmgol/mashunya/db"
 	"github.com/gin-gonic/gin"
 )
 
+var resultNotFound = gin.H{
+	"Result": "Not found",
+}
+
+func getCollection(ctx *gin.Context) {
+	ctx.JSON(http.StatusNotFound, resultNotFound)
+	return
+}
+
 func getProductList(ctx *gin.Context) {
+	var (
+		products []models.Product
+		filter   models.Product
+	)
+
+	categoryID, err := strconv.ParseUint(ctx.Query("category"), 10, 32)
+	if err == nil {
+		filter.CategoryID = uint(categoryID)
+	}
+
+	collectionID, err := strconv.ParseUint(ctx.Query("collection"), 10, 32)
+	if err == nil {
+		var collection models.Collection
+		if db.DB.Debug().Preload("Products", filter).First(&collection, collectionID).RecordNotFound() {
+			ctx.JSON(http.StatusNotFound, resultNotFound)
+			return
+		}
+		ctx.JSON(http.StatusOK,
+			gin.H{
+				"Result": collection.Products,
+			})
+		return
+	}
+
+	if db.DB.Debug().Limit(100).Find(&products, filter).RecordNotFound() {
+		ctx.JSON(http.StatusNotFound, resultNotFound)
+		return
+	}
+
 	ctx.JSON(http.StatusOK,
 		gin.H{
-			"ProductList": "Not found",
+			"Result": products,
 		})
-	return
 }
 
 func getProduct(ctx *gin.Context) {
