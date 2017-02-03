@@ -17,45 +17,53 @@ var resultNotFound = gin.H{
 	"Result": "Not found",
 }
 
-func getCollection(ctx *gin.Context) {
+func getCollectionList(ctx *gin.Context) {
 	ctx.JSON(http.StatusNotFound, resultNotFound)
 	return
 }
 
-func getProductList(ctx *gin.Context) {
-	var (
-		products []models.Product
-		filter   models.Product
-	)
-
-	categoryID, err := strconv.ParseUint(ctx.Query("category"), 10, 32)
-	if err == nil {
-		filter.CategoryID = uint(categoryID)
+func selectProductsByCollection(collectionID uint, filter models.Product) (statusCode int, result interface{}) {
+	var collection models.Collection
+	if db.DB.Debug().Preload("Products", filter).First(&collection, collectionID).RecordNotFound() {
+		return http.StatusNotFound, resultNotFound
 	}
+	return http.StatusOK, collection.Products
+}
 
-	collectionID, err := strconv.ParseUint(ctx.Query("collection"), 10, 32)
-	if err == nil {
-		var collection models.Collection
-		if db.DB.Debug().Preload("Products", filter).First(&collection, collectionID).RecordNotFound() {
-			ctx.JSON(http.StatusNotFound, resultNotFound)
-			return
-		}
-		ctx.JSON(http.StatusOK,
-			gin.H{
-				"Result": collection.Products,
-			})
-		return
-	}
+func selectProducts(filter models.Product) (statusCode int, result interface{}) {
+	var products []models.Product
 
 	if db.DB.Debug().Limit(100).Find(&products, filter).RecordNotFound() {
-		ctx.JSON(http.StatusNotFound, resultNotFound)
-		return
+		return http.StatusNotFound, resultNotFound
 	}
 
-	ctx.JSON(http.StatusOK,
-		gin.H{
-			"Result": products,
-		})
+	return http.StatusOK, products
+}
+
+func str2uint(str string, out *uint) bool {
+	if value, err := strconv.ParseUint(str, 10, 32); err == nil {
+		*out = uint(value)
+		return true
+	}
+	return false
+}
+
+func str2uintResult(p string) (value uint, success bool) {
+	success = str2uint(p, &value)
+	return
+}
+
+func getProductList(ctx *gin.Context) {
+	var filter models.Product
+
+	str2uint(ctx.Query("category"), &filter.CategoryID)
+
+	if collectionID, success := str2uintResult(ctx.Query("collection")); success {
+		ctx.JSON(selectProductsByCollection(uint(collectionID), filter))
+	} else {
+		ctx.JSON(selectProducts(filter))
+	}
+
 }
 
 func getProduct(ctx *gin.Context) {
