@@ -5,11 +5,10 @@ import (
 	"net/http"
 	"strings"
 
-	"strconv"
-
 	"github.com/dmgol/mashunya/app/models"
 	"github.com/dmgol/mashunya/config"
 	"github.com/dmgol/mashunya/db"
+	"github.com/dmgol/mashunya/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -40,25 +39,12 @@ func selectProducts(filter models.Product) (statusCode int, result interface{}) 
 	return http.StatusOK, products
 }
 
-func str2uint(str string, out *uint) bool {
-	if value, err := strconv.ParseUint(str, 10, 32); err == nil {
-		*out = uint(value)
-		return true
-	}
-	return false
-}
-
-func str2uintResult(p string) (value uint, success bool) {
-	success = str2uint(p, &value)
-	return
-}
-
 func getProductList(ctx *gin.Context) {
 	var filter models.Product
 
-	str2uint(ctx.Query("category"), &filter.CategoryID)
+	utils.ParseUintRef(ctx.Query("category"), &filter.CategoryID)
 
-	if collectionID, success := str2uintResult(ctx.Query("collection")); success {
+	if collectionID, success := utils.ParseUint(ctx.Query("collection")); success {
 		ctx.JSON(selectProductsByCollection(uint(collectionID), filter))
 	} else {
 		ctx.JSON(selectProducts(filter))
