@@ -18,8 +18,8 @@ type Color struct {
 	Code string `l10n:"sync"`
 }
 
-func (color Color) H() *gin.H {
-	return &gin.H{
+func (color Color) H() gin.H {
+	return gin.H{
 		"Name": color.Name,
 	}
 }

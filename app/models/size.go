@@ -18,8 +18,8 @@ type Size struct {
 	Code string `l10n:"sync"`
 }
 
-func (size Size) H() *gin.H {
-	return &gin.H{
+func (size Size) H() gin.H {
+	return gin.H{
 		"Name": size.Name,
 	}
 }
