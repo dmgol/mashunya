@@ -2,18 +2,6 @@ package models
 
 import "github.com/gin-gonic/gin"
 
-type H interface {
-	H() gin.H
-}
-
-func iterate(array []H) []gin.H {
-	result := make([]gin.H, len(array))
-	for i, el := range array {
-		result[i] = el.H()
-	}
-	return result
-}
-
 func (p Product) H() gin.H {
 	colorVars := make([]gin.H, len(p.ColorVariations))
 
