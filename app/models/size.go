@@ -3,6 +3,7 @@ package models
 import (
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/l10n"
 	"github.com/qor/sorting"
@@ -15,6 +16,12 @@ type Size struct {
 	sorting.Sorting
 	Name string
 	Code string `l10n:"sync"`
+}
+
+func (size Size) H() *gin.H {
+	return &gin.H{
+		"Name": size.Name,
+	}
 }
 
 func (size Size) Validate(db *gorm.DB) {

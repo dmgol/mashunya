@@ -3,6 +3,7 @@ package models
 import (
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/l10n"
 	"github.com/qor/sorting"
@@ -15,6 +16,12 @@ type Color struct {
 	sorting.Sorting
 	Name string
 	Code string `l10n:"sync"`
+}
+
+func (color Color) H() *gin.H {
+	return &gin.H{
+		"Name": color.Name,
+	}
 }
 
 func (color Color) Validate(db *gorm.DB) {

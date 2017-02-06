@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/dmgol/mashunya/db"
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/l10n"
 	"github.com/qor/media_library"
@@ -34,6 +35,21 @@ type Product struct {
 	ColorVariations       []ColorVariation `l10n:"sync"`
 	ColorVariationsSorter sorting.SortableCollection
 	ProductProperties     ProductProperties `sql:"type:text"`
+}
+
+func (p Product) H() *gin.H {
+	colorVars := make([]*gin.H, len(p.ColorVariations))
+
+	for i, v := range p.ColorVariations {
+		colorVars[i] = v.H()
+	}
+
+	return &gin.H{
+		"Name":            p.Name,
+		"Code":            p.Code,
+		"Price":           p.Price,
+		"ColorVariations": colorVars,
+	}
 }
 
 func (product Product) DefaultPath() string {
@@ -154,6 +170,17 @@ type ColorVariation struct {
 	SizeVariations []SizeVariation
 }
 
+func (cv ColorVariation) H() *gin.H {
+	sizeVars := make([]*gin.H, len(cv.SizeVariations))
+	for i, sv := range cv.SizeVariations {
+		sizeVars[i] = sv.H()
+	}
+	return &gin.H{
+		"Color":          cv.Color.H(),
+		"SizeVariations": sizeVars,
+	}
+}
+
 type ColorVariationImage struct {
 	gorm.Model
 	ColorVariationID uint
@@ -184,6 +211,12 @@ type SizeVariation struct {
 	SizeID            uint
 	Size              Size
 	AvailableQuantity uint
+}
+
+func (sv SizeVariation) H() *gin.H {
+	return &gin.H{
+		"Size": sv.Size.H(),
+	}
 }
 
 func SizeVariations() []SizeVariation {

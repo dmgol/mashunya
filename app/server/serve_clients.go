@@ -3,7 +3,6 @@ package server
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/dmgol/mashunya/app/models"
 	"github.com/dmgol/mashunya/config"
@@ -52,34 +51,17 @@ func getProductList(ctx *gin.Context) {
 
 }
 
-func getProduct(ctx *gin.Context) {
-	var (
-		product models.Product
-		//colorVariation models.ColorVariation
-		codes       = strings.Split(ctx.Param("code"), "_")
-		productCode = codes[0]
-		//colorCode      string
-	)
-
-	// if len(codes) > 1 {
-	// 	colorCode = codes[1]
-	// }
-
-	if db.DB.Debug().Preload("ColorVariations").Preload("ColorVariations.Color").Preload("Category").Where(&models.Product{Code: productCode}).First(&product).RecordNotFound() {
-		ctx.JSON(http.StatusNotFound,
-			gin.H{
-				"Product": "Not found",
-			})
-		return
+func selectProduct(code string) (statusCode int, result interface{}) {
+	var product models.Product
+	if db.DB.Debug().Preload("ColorVariations").Preload("ColorVariations.Color").Preload("ColorVariations.SizeVariations.Size").Where(&models.Product{Code: code}).First(&product).RecordNotFound() {
+		return http.StatusNotFound, resultNotFound
 	}
+	return http.StatusNotFound, product.H()
+}
 
-	//db.DB.Preload("Product").Preload("Color").Preload("SizeVariations.Size").Where(&models.ColorVariation{ProductID: product.ID, ColorCode: colorCode}).First(&colorVariation)
-
-	ctx.JSON(http.StatusOK,
-		gin.H{
-			"Product": product,
-			//"ColorVariation": colorVariation,
-		})
+func getProduct(ctx *gin.Context) {
+	productCode := ctx.Param("code")
+	ctx.JSON(selectProduct(productCode))
 }
 
 func serveStaticPath(router *gin.Engine, paths []string, root string) {
