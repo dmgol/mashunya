@@ -37,14 +37,14 @@ type Product struct {
 	ProductProperties     ProductProperties `sql:"type:text"`
 }
 
-func (p Product) H() *gin.H {
-	colorVars := make([]*gin.H, len(p.ColorVariations))
+func (p Product) H() gin.H {
+	colorVars := make([]gin.H, len(p.ColorVariations))
 
 	for i, v := range p.ColorVariations {
 		colorVars[i] = v.H()
 	}
 
-	return &gin.H{
+	return gin.H{
 		"Name":            p.Name,
 		"Code":            p.Code,
 		"Price":           p.Price,
@@ -170,12 +170,12 @@ type ColorVariation struct {
 	SizeVariations []SizeVariation
 }
 
-func (cv ColorVariation) H() *gin.H {
-	sizeVars := make([]*gin.H, len(cv.SizeVariations))
+func (cv ColorVariation) H() gin.H {
+	sizeVars := make([]gin.H, len(cv.SizeVariations))
 	for i, sv := range cv.SizeVariations {
 		sizeVars[i] = sv.H()
 	}
-	return &gin.H{
+	return gin.H{
 		"Color":          cv.Color.H(),
 		"SizeVariations": sizeVars,
 	}
@@ -213,8 +213,8 @@ type SizeVariation struct {
 	AvailableQuantity uint
 }
 
-func (sv SizeVariation) H() *gin.H {
-	return &gin.H{
+func (sv SizeVariation) H() gin.H {
+	return gin.H{
 		"Size": sv.Size.H(),
 	}
 }
