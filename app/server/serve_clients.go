@@ -56,7 +56,7 @@ func selectProduct(code string) (statusCode int, result interface{}) {
 	if db.DB.Debug().Preload("ColorVariations").Preload("ColorVariations.Color").Preload("ColorVariations.SizeVariations.Size").Where(&models.Product{Code: code}).First(&product).RecordNotFound() {
 		return http.StatusNotFound, resultNotFound
 	}
-	return http.StatusNotFound, product.H()
+	return http.StatusOK, product.H()
 }
 
 func getProduct(ctx *gin.Context) {
