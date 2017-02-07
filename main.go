@@ -5,5 +5,5 @@ import "github.com/dmgol/mashunya/app/server"
 
 func main() {
 	go server.ServeAdmins()
-	server.ServeClients()
+	server.ServeAPI()
 }

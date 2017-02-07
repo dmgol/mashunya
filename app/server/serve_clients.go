@@ -83,8 +83,8 @@ func serveStaticPath(router *gin.Engine, paths []string) {
 	}
 }
 
-// ServeClients serves client request
-func ServeClients() {
+// ServeAPI serves client request
+func ServeAPI() {
 	const APIRoot = "/api/"
 
 	router := gin.Default()
