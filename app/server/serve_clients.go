@@ -25,17 +25,17 @@ func selectProductsByCollection(collectionID uint, filter models.Product) (statu
 	if db.DB.Debug().Preload("Products", filter).First(&collection, collectionID).RecordNotFound() {
 		return http.StatusNotFound, resultNotFound
 	}
-	return http.StatusOK, collection.Products
+	return http.StatusOK, models.ProductList(collection.Products).H()
 }
 
 func selectProducts(filter models.Product) (statusCode int, result interface{}) {
 	var products []models.Product
 
-	if db.DB.Debug().Limit(100).Find(&products, filter).RecordNotFound() {
+	if db.DB.Debug().Limit(100).Preload("ColorVariations").Preload("ColorVariations.Color").Preload("ColorVariations.SizeVariations.Size").Find(&products, filter).RecordNotFound() {
 		return http.StatusNotFound, resultNotFound
 	}
 
-	return http.StatusOK, products
+	return http.StatusOK, models.ProductList(products).H()
 }
 
 func getProductList(ctx *gin.Context) {

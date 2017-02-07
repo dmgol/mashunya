@@ -2,30 +2,52 @@ package models
 
 import "github.com/gin-gonic/gin"
 
-func (p Product) H() gin.H {
-	colorVars := make([]gin.H, len(p.ColorVariations))
+type ProductList []Product
 
-	for i, v := range p.ColorVariations {
-		colorVars[i] = v.H()
+func (list ProductList) H() []gin.H {
+	result := make([]gin.H, len(list))
+	for i, el := range list {
+		result[i] = el.H()
 	}
+	return result
+}
 
+func (p Product) H() gin.H {
 	return gin.H{
 		"Name":            p.Name,
 		"Code":            p.Code,
 		"Price":           p.Price,
-		"ColorVariations": colorVars,
+		"ColorVariations": ColorVariationList(p.ColorVariations).H(),
+		"Path":            p.DefaultPath(),
+		"MainImageUrl":    p.MainImageURL(),
 	}
 }
 
-func (cv ColorVariation) H() gin.H {
-	sizeVars := make([]gin.H, len(cv.SizeVariations))
-	for i, sv := range cv.SizeVariations {
-		sizeVars[i] = sv.H()
+type ColorVariationList []ColorVariation
+
+func (list ColorVariationList) H() []gin.H {
+	result := make([]gin.H, len(list))
+	for i, el := range list {
+		result[i] = el.H()
 	}
+	return result
+}
+
+func (cv ColorVariation) H() gin.H {
 	return gin.H{
 		"Color":          cv.Color.H(),
-		"SizeVariations": sizeVars,
+		"SizeVariations": SizeVariationList(cv.SizeVariations).H(),
 	}
+}
+
+type SizeVariationList []SizeVariation
+
+func (list SizeVariationList) H() []gin.H {
+	result := make([]gin.H, len(list))
+	for i, el := range list {
+		result[i] = el.H()
+	}
+	return result
 }
 
 func (sv SizeVariation) H() gin.H {
