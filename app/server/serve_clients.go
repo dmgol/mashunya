@@ -22,7 +22,12 @@ func getCollectionList(ctx *gin.Context) {
 
 func selectProductsByCollection(collectionID uint, filter models.Product) (statusCode int, result interface{}) {
 	var collection models.Collection
-	if db.DB.Debug().Preload("Products", filter).First(&collection, collectionID).RecordNotFound() {
+	if db.DB.Debug().
+		Preload("Products", filter).
+		Preload("Products.ColorVariations").
+		Preload("Products.ColorVariations.Color").
+		Preload("Products.ColorVariations.SizeVariations.Size").
+		First(&collection, collectionID).RecordNotFound() {
 		return http.StatusNotFound, resultNotFound
 	}
 	return http.StatusOK, models.ProductList(collection.Products).H()
@@ -31,7 +36,11 @@ func selectProductsByCollection(collectionID uint, filter models.Product) (statu
 func selectProducts(filter models.Product) (statusCode int, result interface{}) {
 	var products []models.Product
 
-	if db.DB.Debug().Limit(100).Preload("ColorVariations").Preload("ColorVariations.Color").Preload("ColorVariations.SizeVariations.Size").Find(&products, filter).RecordNotFound() {
+	if db.DB.Debug().Limit(100).
+		Preload("ColorVariations").
+		Preload("ColorVariations.Color").
+		Preload("ColorVariations.SizeVariations.Size").
+		Find(&products, filter).RecordNotFound() {
 		return http.StatusNotFound, resultNotFound
 	}
 
@@ -53,7 +62,11 @@ func getProductList(ctx *gin.Context) {
 
 func selectProduct(code string) (statusCode int, result interface{}) {
 	var product models.Product
-	if db.DB.Debug().Preload("ColorVariations").Preload("ColorVariations.Color").Preload("ColorVariations.SizeVariations.Size").Where(&models.Product{Code: code}).First(&product).RecordNotFound() {
+	if db.DB.Debug().
+		Preload("ColorVariations").
+		Preload("ColorVariations.Color").
+		Preload("ColorVariations.SizeVariations.Size").
+		Where(&models.Product{Code: code}).First(&product).RecordNotFound() {
 		return http.StatusNotFound, resultNotFound
 	}
 	return http.StatusOK, product.H()
@@ -72,12 +85,14 @@ func serveStaticPath(router *gin.Engine, paths []string, root string) {
 
 // ServeClients serves client request
 func ServeClients() {
+	const APIRoot = "/api/"
+
 	router := gin.Default()
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"Result": "Ok"})
+	router.GET(APIRoot, func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"Result": "Ok", "Version": "1"})
 	})
-	router.GET("/products", getProductList)
-	router.GET("/products/:code", getProduct)
+	router.GET(APIRoot+"products", getProductList)
+	router.GET(APIRoot+"products/:code", getProduct)
 
 	serveStaticPath(router, []string{"system"}, config.Root)
 
