@@ -77,9 +77,9 @@ func getProduct(ctx *gin.Context) {
 	ctx.JSON(selectProduct(productCode))
 }
 
-func serveStaticPath(router *gin.Engine, paths []string, root string) {
+func serveStaticPath(router *gin.Engine, paths []string) {
 	for _, path := range paths {
-		router.Static("/"+path, "public/"+path+"/"+root)
+		router.Static("/"+path, "public/"+path+"/")
 	}
 }
 
@@ -94,7 +94,7 @@ func ServeClients() {
 	router.GET(APIRoot+"products", getProductList)
 	router.GET(APIRoot+"products/:code", getProduct)
 
-	serveStaticPath(router, []string{"system"}, config.Root)
+	serveStaticPath(router, []string{"system"})
 
 	router.Run(fmt.Sprintf(":%d", config.Config.ClientsPort))
 }
