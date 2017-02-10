@@ -76,6 +76,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             readOnly: true
           }
         },
+        
+        
+        created: function() {
+          console.log(this.localName + '#(' + this.id + ') was created');
+        },
+
+        attached: function() {
+          console.log(this.localName + '#' + this.id + ' was attached');
+        },
+
+        ready: function() {
+          console.log(this.localName + '#' + this.id + ' has local DOM initialized');
+        },
 
         _getCategoryObject: function (categoryName) {
           for (var i = 0, c; c = this.categories[i]; ++i) {
@@ -90,6 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // Fetch the items of the category. Note that the fetch is asynchronous,
           // which means `category.items` may not be set initially (but that path
           // will be notified when the fetch completes).
+          console.log(this.localName + '#(' + this.id + ') _computeCategory called with params: [' + categoryName + ']');
           var categoryObj = this._getCategoryObject(categoryName);
           this._fetchItems(categoryObj, 1);
           return categoryObj;
@@ -121,6 +135,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
 
         _getResource: function (rq, attempts) {
+          console.log(this.localName + '#(' + this.id + ') _getResource called with params: [' + rq.url + ']');
           var xhr = new XMLHttpRequest();
           xhr.addEventListener('load', rq.onLoad.bind(this));
           xhr.addEventListener('error', function (e) {

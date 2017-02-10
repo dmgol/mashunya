@@ -88,6 +88,9 @@ func ServeAPI() {
 	const APIRoot = "/api/"
 
 	router := gin.Default()
+
+	router.NoRoute(ServeRoot("/", "frontend/"))
+
 	router.GET(APIRoot, func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"Result": "Ok", "Version": "1"})
 	})
