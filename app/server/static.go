@@ -58,10 +58,9 @@ func StaticServe(urlPrefix string, fs ServeFileSystem, defaultPath string) gin.H
 		path := c.Request.URL.Path
 		if fs.Exists(urlPrefix, path) {
 			fileserver.ServeHTTP(c.Writer, c.Request)
-			c.Abort()
 		} else {
 			c.File(defaultPath)
 		}
-
+		c.Abort()
 	}
 }
