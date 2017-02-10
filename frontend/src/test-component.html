@@ -1,0 +1,32 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="product-detail-data.html">
+<dom-module id="test-component">
+  <template>
+      <product-detail-data code="1234" productDetail="{{detail}}"></product-detail-data>
+      <pre>
+          [[detail]]
+      </pre>
+  </template>  
+  <script>
+    Polymer({
+
+      is: 'test-component',
+
+      properties: {
+        obj: Object,
+        json: {
+            computed: "_stringify(obj)",
+        }
+      },
+
+      _stringify: function(obj) {
+          return JSON.stringify(obj)
+      },
+
+      created: function () {
+        console.log(this.localName + '#(' + this.id + ') was created');
+      },
+
+    });
+  </script>
+</dom-module>

@@ -11,11 +11,7 @@
           notify: false,
           observer: "_codeChanged"
         },
-        productDetail: {
-          type: Object,
-          notify: true,
-          readOnly:true,
-        },
+        productDetail: Object,
         failure: {
           type: Boolean,
           notify: true,
@@ -47,7 +43,7 @@
           onLoad: function (e) {
             var data = JSON.parse(e.target.responseText)
             console.log(data);
-            this.set('data', data);
+            this.set('productDetail', data);
           },
           onError: function (e) {
             this._setFailure(true);

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
@@ -7,10 +8,10 @@
   <title>Test</title>
 
 
-  <link rel="import" href="/src/product-detail-data.html">
+  
+  <link rel="import" href="/src/test-component.html">
 
   <style>
-
     body {
       margin: 0;
       font-family: 'Roboto', 'Noto', sans-serif;
@@ -18,23 +19,24 @@
       line-height: 1.5;
       min-height: 100vh;
     }
-
   </style>
 
 </head>
+
 <body>
 
 
-  <product-detail-data code="1234"></product-detail-data>
   
+  <test-component></test-component>
+  
+
   <script>
+    Polymer = { lazyRegister: true, dom: 'shadow' };
 
-    Polymer = {lazyRegister: true, dom: 'shadow'};
-
-    (function() {
+    (function () {
       if ('registerElement' in document
-          && 'import' in document.createElement('link')
-          && 'content' in document.createElement('template')) {
+        && 'import' in document.createElement('link')
+        && 'content' in document.createElement('template')) {
         // platform is good!
       } else {
         // polyfill the platform!
@@ -42,8 +44,10 @@
         e.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
         document.body.appendChild(e);
       }
-    })();
+    }
+    )();
   </script>
 
 </body>
+
 </html>
