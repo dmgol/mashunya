@@ -1,0 +1,53 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="product-data">
+    <template>
+        <iron-ajax id="request" auto url="api/products/[[code]]" on-response="_handleResponse" on-error="_handleError" handle-as="json">
+        </iron-ajax>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'product-data',
+
+            properties: {
+                code: {
+                    type: String,
+                    notify: false
+                },
+                product: {
+                    type: Object,
+                    readOnly: true,
+                    notify: true
+                },
+                failure: {
+                    type: Boolean,
+                    value: false,
+                    readOnly: true,
+                    notify: true
+                }
+            },
+
+            created: function () {
+                console.log(this.localName + '#(' + this.id + ') was created')
+            },
+            _handleResponse: function (event) {
+                console.log(this.localName + '#(' + this.id + ') _handleResponse called')
+                var product = event.detail.response
+                if (product) {
+                                   console.log(product)
+                this._setProduct(product)
+                this._setFailure(false)
+                } else {
+                    this._setFailure(true)
+                }
+ 
+            },
+            _handleError: function(event) {
+                console.log(event)
+            }
+
+        })
+    </script>
+</dom-module>
