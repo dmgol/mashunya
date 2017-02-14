@@ -1,84 +1,52 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
 <dom-module id="product-data">
-  <script>
-    Polymer({
+    <template>
+        <iron-ajax id="ajax" auto url="api/products/[[code]]" on-response="_handleResponse" on-error="_handleError" handle-as="json">
+        </iron-ajax>
+    </template>
+    <script>
+        Polymer({
 
-      is: 'product-data',
+            is: 'product-data',
 
-      properties: {
-        code: {
-          type: String,
-          notify: false,
-          observer: "_codeChanged"
-        },
-        product: {
-          type: Object,
-          notify: true,
-          readOnly: true
-        },
-        failure: {
-          type: Boolean,
-          notify: true,
-          readOnly: true
-        },
-      },
+            properties: {
+                code: {
+                    type: String,
+                    notify: false
+                },
+                product: {
+                    type: Object,
+                    readOnly: true,
+                    notify: true
+                },
+                failure: {
+                    type: Boolean,
+                    value: false,
+                    readOnly: true,
+                    notify: true
+                }
+            },
 
-      created: function () {
-        console.log(this.localName + '#(' + this.id + ') was created');
-      },
+            //created: function () {},
 
-      _codeChanged: function(value, old) {
-        console.log(this.localName + '#(' + this.id + ') _codeChanged called with params: [' + value + ']');
-        if (value !== old) {
-          this._getData(value)
-        }
-      },
+            _handleResponse: function (event) {
+                console.log(this.localName + '#(' + this.id + ') _handleResponse called')
+                var product = event.detail.response
+                if (product) {
+                    console.log(product)
+                    this._setProduct(product)
+                    this._setFailure(false)
+                } else {
+                    this._setFailure(true)
+                }
 
-      _getData: function (code) {
-        this._fetchItems(code, 1);
-      },
+            },
+            _handleError: function (event) {
+                console.log(event)
+            }
 
-      _fetchItems: function (code, attempts) {
-        this._setFailure(false);
-        // Only fetch the items of a category if it has not been previously set.
-
-        this._getResource({
-          url: 'api/products/' + code,
-          onLoad: function (e) {
-            var data = JSON.parse(e.target.responseText);
-            console.log(data)
-            this._setProduct(data);
-          },
-          onError: function (e) {
-            this._setFailure(true);
-          }
-        }, attempts);
-      },
-
-      _getResource: function (rq, attempts) {
-        console.log(this.localName + '#(' + this.id + ') _getResource called with params: [' + rq.url + ']');
-        var xhr = new XMLHttpRequest();
-        xhr.addEventListener('load', rq.onLoad.bind(this));
-        xhr.addEventListener('error', function (e) {
-          // Flaky connections might fail fetching resources
-          if (attempts > 1) {
-            this.debounce('_getResource', this._getResource.bind(this, rq, attempts - 1), 200);
-          } else {
-            rq.onError.call(this, e);
-          }
-        }.bind(this));
-
-        xhr.open('GET', rq.url);
-        xhr.send();
-      },
-
-      refresh: function () {
-        if (this.code) {
-          // Try at most 3 times to get the items.
-          this._fetchItems(code, 3);
-        }
-      }
-
-    });
-  </script>
+        })
+    </script>
 </dom-module>
