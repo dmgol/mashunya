@@ -1,10 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="product-detail-data.html">
+<link rel="import" href="product-data.html">
 <dom-module id="test-component">
   <template>
-      <product-detail-data code="1234" productDetail="{{detail}}"></product-detail-data>
+      <product-data code="1234" product="{{product}}" failure="{{failure}}"></product-data>
       <pre>
-          [[detail]]
+          [[product.Price]],[[product.Name]] - [[failure]]
       </pre>
   </template>  
   <script>
@@ -12,14 +12,9 @@
 
       is: 'test-component',
 
-      properties: {
-        obj: Object,
-        json: {
-            computed: "_stringify(obj)",
-        }
-      },
-
       _stringify: function(obj) {
+          console.log(this.localName + '_stringify called with -->');
+          console.log(obj);
           return JSON.stringify(obj)
       },
 

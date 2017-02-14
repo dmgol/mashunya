@@ -1,9 +1,9 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<dom-module id="product-detail-data">
+<dom-module id="product-data">
   <script>
     Polymer({
 
-      is: 'product-detail-data',
+      is: 'product-data',
 
       properties: {
         code: {
@@ -11,7 +11,11 @@
           notify: false,
           observer: "_codeChanged"
         },
-        productDetail: Object,
+        product: {
+          type: Object,
+          notify: true,
+          readOnly: true
+        },
         failure: {
           type: Boolean,
           notify: true,
@@ -41,9 +45,9 @@
         this._getResource({
           url: 'api/products/' + code,
           onLoad: function (e) {
-            var data = JSON.parse(e.target.responseText)
-            console.log(data);
-            this.set('productDetail', data);
+            var data = JSON.parse(e.target.responseText);
+            console.log(data)
+            this._setProduct(data);
           },
           onError: function (e) {
             this._setFailure(true);
