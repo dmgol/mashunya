@@ -1,22 +1,27 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
-<dom-module id="product-data">
+<dom-module id="product-list-data">
     <template>
-        <iron-ajax id="ajax" auto url="/api/products/[[code]]" on-response="_handleResponse" on-error="_handleError" handle-as="json">
+        <iron-ajax id="ajax" auto url="/api/products?category=[[category]]&amp;collection=[[collection]]" 
+                    on-response="_handleResponse" on-error="_handleError" handle-as="json">
         </iron-ajax>
     </template>
     <script>
         Polymer({
 
-            is: 'product-data',
+            is: 'product-list-data',
 
             properties: {
-                code: {
-                    type: String,
+                collection: {
+                    type: Number,
                     notify: false
                 },
-                product: {
+                category: {
+                    type: Number,
+                    notify: false
+                },
+                productList: {
                     type: Object,
                     readOnly: true,
                     notify: true
@@ -26,17 +31,18 @@
                     value: false,
                     readOnly: true,
                     notify: true
-                }
+                },
             },
 
             //created: function () {},
 
             _handleResponse: function (event) {
                 console.log(this.localName + '#(' + this.id + ') _handleResponse called')
-                var product = event.detail.response
-                if (product) {
-                    console.log(product)
-                    this._setProduct(product)
+                var url = event.detail.url
+                var list = event.detail.response
+                if (list) {
+                    console.log(list)
+                    this._setProductList(list)
                     this._setFailure(false)
                 } else {
                     this._setFailure(true)

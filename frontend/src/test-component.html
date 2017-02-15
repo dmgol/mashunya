@@ -1,10 +1,10 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="product-data.html">
+<link rel="import" href="product-list-data.html">
 <dom-module id="test-component">
   <template>
-      <product-data id="test-component-product-data" code="1234" product="{{product}}" failure="{{failure}}"></product-data>
+      <product-list-data id="test-component-product-list-data" category="2" collection="1" product-list="{{list}}" failure="{{failure}}"></product-list-data>
       <pre>
-          [[product.Price]],[[product.Name]] - [[failure]]
+          [[_stringify(list)]]
       </pre>
   </template>  
   <script>
