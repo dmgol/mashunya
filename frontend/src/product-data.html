@@ -3,7 +3,7 @@
 
 <dom-module id="product-data">
     <template>
-        <iron-ajax id="ajax" auto url="/api/products/[[code]]" on-response="_handleResponse" on-error="_handleError" handle-as="json">
+        <iron-ajax id="ajax" auto url="/api/products/[[code]]" on-response="_handleResponse" on-request="_handleRequest" on-error="_handleError" handle-as="json">
         </iron-ajax>
     </template>
     <script>
@@ -21,7 +21,7 @@
                     readOnly: true,
                     notify: true
                 },
-                failure: {
+                ready: {
                     type: Boolean,
                     value: false,
                     readOnly: true,
@@ -37,11 +37,12 @@
                 if (product) {
                     console.log(product)
                     this._setProduct(product)
-                    this._setFailure(false)
-                } else {
-                    this._setFailure(true)
+                    this._setReady(false)
                 }
-
+            },
+            _handleRequest(event) {
+                console.log(this.localName + '#(' + this.id + ') _handleRequest called')
+                this._setReady(false)
             },
             _handleError: function (event) {
                 console.log(event)
