@@ -193,6 +193,7 @@ func init() {
 			Rows: [][]string{
 				{"Name"},
 				{"Code", "Price"},
+				{"PriceA", "PriceB"},
 				{"MainImage"},
 			}},
 		&admin.Section{

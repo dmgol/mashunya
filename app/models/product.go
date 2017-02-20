@@ -30,6 +30,8 @@ type Product struct {
 	Collections           []Collection `l10n:"sync" gorm:"many2many:product_collections;"`
 	MainImage             media_library.MediaBox
 	Price                 float32          `l10n:"sync"`
+	PriceA                float32          `l10n:"sync"`
+	PriceB                float32          `l10n:"sync"`
 	Description           string           `sql:"size:2000"`
 	ColorVariations       []ColorVariation `l10n:"sync"`
 	ColorVariationsSorter sorting.SortableCollection
