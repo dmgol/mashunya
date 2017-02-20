@@ -12,7 +12,7 @@ import (
 
 func init() {
 	roles.Register("admin", func(req *http.Request, currentUser interface{}) bool {
-		return currentUser != nil && currentUser.(*models.User).Role == "Admin"
+		return currentUser != nil && currentUser.(*models.AdminUser).Role == "Admin"
 	})
 }
 
@@ -32,7 +32,7 @@ func (AdminAuth) GetCurrentUser(c *admin.Context) qor.CurrentUser {
 	userInter, err := Auth.CurrentUser(c.Writer, c.Request)
 	if userInter != nil && err == nil {
 		log.Println("...AdminAuth.GetCurrentUser", userInter)
-		return userInter.(*models.User)
+		return userInter.(*models.AdminUser)
 	}
 	log.Println("...AdminAuth.GetCurrentUser", nil)
 	return nil

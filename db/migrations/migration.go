@@ -17,6 +17,7 @@ func init() {
 	AutoMigrate(&models.Order{}, &models.OrderItem{})
 
 	AutoMigrate(&models.User{})
+	AutoMigrate(&models.AdminUser{})
 
 	AutoMigrate(&models.MediaLibrary{})
 }

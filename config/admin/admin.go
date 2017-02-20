@@ -368,7 +368,6 @@ func init() {
 	// Add User
 	user := Admin.AddResource(&models.User{}, &admin.Config{Menu: []string{"User Management"}})
 	user.Meta(&admin.Meta{Name: "Gender", Config: &admin.SelectOneConfig{Collection: []string{"Male", "Female", "Unknown"}}})
-	user.Meta(&admin.Meta{Name: "Role", Config: &admin.SelectOneConfig{Collection: []string{"Admin", "Maintainer", "Member"}}})
 	user.Meta(&admin.Meta{Name: "Password",
 		Type:            "password",
 		FormattedValuer: func(interface{}, *qor.Context) interface{} { return "" },
@@ -394,26 +393,67 @@ func init() {
 		return user.(*models.User).Confirmed
 	}})
 
-	user.Filter(&admin.Filter{
-		Name: "Role",
-		Config: &admin.SelectOneConfig{
-			Collection: []string{"Admin", "Maintainer", "Member"},
-		},
-	})
-
-	user.IndexAttrs("ID", "Email", "Name", "Gender", "Role")
+	user.IndexAttrs("ID", "Email", "FirstName", "LastName", "Gender", "Wholesaler")
 	user.ShowAttrs(
 		&admin.Section{
 			Title: "Basic Information",
 			Rows: [][]string{
-				{"Name"},
+				{"FirstName"},
+				{"MiddleName"},
+				{"LastName"},
 				{"Email", "Password"},
-				{"Gender", "Role"},
+				{"Gender", "Wholesaler"},
 				{"Confirmed"},
 			}},
 		"Addresses",
 	)
 	user.EditAttrs(user.ShowAttrs())
+
+	// Add AdminUser
+	adminUser := Admin.AddResource(&models.AdminUser{}, &admin.Config{Menu: []string{"User Management"}})
+	adminUser.Meta(&admin.Meta{Name: "Role", Config: &admin.SelectOneConfig{Collection: []string{"Admin", "Maintainer"}}})
+	adminUser.Meta(&admin.Meta{Name: "Password",
+		Type:            "password",
+		FormattedValuer: func(interface{}, *qor.Context) interface{} { return "" },
+		Setter: func(resource interface{}, metaValue *resource.MetaValue, context *qor.Context) {
+			values := metaValue.Value.([]string)
+			if len(values) > 0 {
+				if newPassword := values[0]; newPassword != "" {
+					bcryptPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+					if err != nil {
+						context.DB.AddError(validations.NewError(adminUser, "Password", "Can't encrpt password"))
+						return
+					}
+					u := resource.(*models.AdminUser)
+					u.Password = string(bcryptPassword)
+				}
+			}
+		},
+	})
+	adminUser.Meta(&admin.Meta{Name: "Confirmed", Valuer: func(adminUser interface{}, ctx *qor.Context) interface{} {
+		if adminUser.(*models.AdminUser).ID == 0 {
+			return true
+		}
+		return adminUser.(*models.AdminUser).Confirmed
+	}})
+
+	adminUser.Filter(&admin.Filter{
+		Name: "Role",
+		Config: &admin.SelectOneConfig{
+			Collection: []string{"Admin", "Maintainer"},
+		},
+	})
+
+	adminUser.IndexAttrs("ID", "Email", "Role")
+	adminUser.ShowAttrs(
+		&admin.Section{
+			Title: "Basic Information",
+			Rows: [][]string{
+				{"Email", "Password"},
+				{"Role", "Confirmed"},
+			}},
+	)
+	adminUser.EditAttrs(adminUser.ShowAttrs())
 
 	// Add Translations
 	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"Site Management"}, Priority: 1})
