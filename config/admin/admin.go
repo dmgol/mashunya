@@ -158,6 +158,11 @@ func init() {
 		Config: &admin.SelectOneConfig{RemoteDataResource: collection},
 	})
 
+	product.Filter(&admin.Filter{
+		Name:   "Category",
+		Config: &admin.SelectOneConfig{RemoteDataResource: category},
+	})
+
 	product.UseTheme("grid")
 
 	colorVariationMeta := product.Meta(&admin.Meta{Name: "ColorVariations"})
