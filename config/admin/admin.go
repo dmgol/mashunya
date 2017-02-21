@@ -103,6 +103,8 @@ func init() {
 	category.Meta(&admin.Meta{Name: "Categories", Type: "select_many"})
 
 	collection := Admin.AddResource(&models.Collection{}, &admin.Config{Menu: []string{"Product Management"}, Priority: -2})
+	collection.NewAttrs("Name")
+	collection.EditAttrs("Name")
 
 	// Add ProductImage as Media Libraray
 	ProductImagesResource := Admin.AddResource(&models.ProductImage{}, &admin.Config{Menu: []string{"Product Management"}, Priority: -1})
