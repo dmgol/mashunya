@@ -14,6 +14,7 @@ type Category struct {
 	l10n.Locale
 	sorting.Sorting
 	Name string
+	Code string `l10n:"sync"`
 
 	Categories []Category
 	CategoryID uint
